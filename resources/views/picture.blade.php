@@ -90,11 +90,4 @@
 
 @include('layouts.edit_upload_mordal')
 
-<script>
-    function replaceSizeFunction() {
-  var str = document.getElementById("gifSize").innerHTML;
-  var res = str.replace("Microsoft", "W3Schools");
-  document.getElementById("demo").innerHTML = res;
-}
-</script>
 @endsection
