@@ -14,7 +14,6 @@
                         data-target="#addCatalogModal">
                         <i class="fa fa-plus" aria-hidden="true"></i>
                     </button>
-
                 </div>
             </div>
         </div>
@@ -49,7 +48,6 @@
                 @endforeach
             </div>
             @endif
-
 
         </div>
     </div>
