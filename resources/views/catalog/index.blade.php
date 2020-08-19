@@ -52,5 +52,5 @@
         </div>
     </div>
 </div>
-@include('layouts.store_catalog_mordal')
+@include('layouts.mordals.store_catalog_mordal')
 @endsection

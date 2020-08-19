@@ -12,10 +12,10 @@
     @elseif(count($uploads))
 
     <div class="progress">
-        <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">GIF 25%</div>
-        <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">JPEG 25%</div>
-        <div class="progress-bar bg-info" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">JPG 25%</div>
-        <div class="progress-bar bg-warning" role="progressbar" style="width: 25%" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100">PNG 25%</div>
+        <div class="progress-bar" id="gifBar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">GIF 25%</div>
+        <div class="progress-bar bg-success" id="jpegBar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">JPEG 25%</div>
+        <div class="progress-bar bg-info" id="jpgBar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">JPG 25%</div>
+        <div class="progress-bar bg-warning" id="pngBar" role="progressbar" style="width: 25%" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100">PNG 25%</div>
       </div>
     {{-- <div class="card"> --}}
         <table class="table table-bordered table-hover" cellspacing="0" width="100%">
@@ -26,7 +26,7 @@
                     <th>Name</th>
                     <th>Type</th>
                     <th>Size</th>
-                    <th>Cteated at</th>
+                    <th>Created at</th>
                     <th>Updated at</th>
                     <th width="150px">Action</th>
                 </tr>
@@ -55,7 +55,6 @@
             $jpgSize = $jpgSize/$byPercentage;
             $pngSize = $pngSize/$byPercentage;
             @endphp
-
             <tr class="data-row">
                 <td class="font-weight-bold">{{ ++$i }}</td>
                 <td>
@@ -84,10 +83,20 @@
 
             </tbody>
         </table>
-    {{-- </div> --}}
+        <p>{{$jpgSize}}</p>
+        {{-- </div> --}}
     @endif
 </div>
 
-@include('layouts.edit_upload_mordal')
+@include('layouts.mordals.edit_upload_mordal')
 
+<script>
+    function sizeFunction() {
+        var str = document.getElementById("jpgBar").innerHTML;
+        var res = str.replace("<?php echo $jpgSize ?>", function (x) {
+            return x;
+        });
+        document.getElementById("jpgBar").innerHTML = res;
+    }
+</script>
 @endsection

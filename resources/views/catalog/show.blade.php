@@ -43,7 +43,7 @@
         </div>
     </div>
 </div>
-@include('layouts.update_catalog_mordal')
+@include('layouts.mordals.update_catalog_mordal')
 {{-- @include('layouts.update_catalog_name_mordal') --}}
 {{-- @include('layouts.update_catalog_image_mordal') --}}
 @endsection

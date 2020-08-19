@@ -12,25 +12,21 @@ use Illuminate\Support\Facades\Storage;
 
 class UploadController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function index()
     {
         $user  = Auth::user();
-        $uploads = Upload::latest()->where('user_id', '=', $user->id)->paginate(30);
+        $uploads = Upload::orderBy('updated_at', 'DESC')
+            ->where('user_id', '=', $user->id)
+            ->paginate(30);
+
         return view('picture', compact('uploads'))
             ->with('i', (request()->input('page', 1) - 1) * 30);
     }
-
 
     public function create()
     {
         return view('upload');
     }
-
 
     public function store(Request $request)
     {
@@ -80,7 +76,9 @@ class UploadController extends Controller
     public function edit($id)
     {
         $user = Auth::user();
-        $catalog = Catalog::pluck('name', 'id')->where('user_id', '=', $user->id)->all();
+        $catalog = Catalog::pluck('name', 'id')
+            ->where('user_id', '=', $user->id)
+            ->get();
         return view('upload.edit', compact('catalog'));
 
     }
@@ -110,11 +108,13 @@ class UploadController extends Controller
         $file = Upload::select('fileurl')
             ->where('id', '=', $id)
             ->Where('user_id', '=', $user->id)
-            ->limit(1)->get();
+            ->limit(1)
+            ->get();
 
         //delete file from storage
         Storage::delete('public/userupload/' . $file[0]->fileurl);
         Upload::find($id)->delete();
+
         return redirect()->route('upload.index')
             ->with('success', 'File deleted successfully');
     }
