@@ -31,9 +31,15 @@
                     <a href="{{ route('catalog.show',$catalog->id) }}">
                         <div class="card my-2">
                             <div class="img-wrapper">
+                                @if ($catalog->uploads->isEmpty())
+                                    <img class="img-responsive"
+                                         src="{{ url('storage/app/no-image.png') }}"
+                                         style="width: 100%; max-height: 250px; min-height: 250px; object-fit: cover;">
+                                @else
                                 <img class="img-responsive"
-                                    src="{{ url('storage/userupload/'.$catalog->uploads[0]->fileurl) }}"
+                                    src="{{ url('storage/userupload/'.$catalog->uploads->first()->fileurl) }}"
                                     style="width: 100%; max-height: 250px; min-height: 250px; object-fit: cover;">
+                                @endif
                             </div>
                             <div class="card-body">
                                 <div class="row">

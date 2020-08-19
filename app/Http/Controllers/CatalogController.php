@@ -13,7 +13,7 @@ class CatalogController extends Controller
 {
     public function index()
     {
-        $user  = Auth::user();
+        $user = Auth::user();
         $catalogs = Catalog::orderBy('name', 'ASC')
             ->where('user_id', '=', $user->id)
             ->paginate(30);
@@ -25,21 +25,19 @@ class CatalogController extends Controller
             ->with('i', (request()->input('page', 1) - 1) * 30);
     }
 
-
     public function create()
     {
         //
     }
 
-
     public function store(Request $request)
     {
+        $user = Auth::user();
         $catalog = request()->validate([
             'name' => 'required|string',
             'upload_id.*' => 'required|numeric'
         ]);
-
-        $catalog['user_id'] = Auth::user()->id;
+        $catalog['user_id'] = $user->id;
 
         DB::beginTransaction();
         try {
@@ -54,7 +52,6 @@ class CatalogController extends Controller
             $now = date('Y-m-d H:i:s');
 
             foreach ($request->input('upload_id') as $upload_id) {
-
                 $arrData[] = [
                     'catalog_id' => $catalog_id,
                     'upload_id' => $upload_id,
@@ -96,13 +93,11 @@ class CatalogController extends Controller
 
     public function update(Request $request, Catalog $catalog)
     {
-        $arrData = $request->all();
-
-        request()->validate([
+//        $arrData = $request->all();
+        $arrData = $request->validate([
             'name' => 'required|string',
             'upload_id.*' => 'required|numeric'
         ]);
-
         $catalog['user_id'] = Auth::user()->id;
 
         DB::beginTransaction();
@@ -120,7 +115,6 @@ class CatalogController extends Controller
                     $ids[] = $upload_id;
                 }
             }
-            // dd($ids);
 
             $catalog->update($arrData);
             $catalog->uploads()->sync($ids);
@@ -140,13 +134,10 @@ class CatalogController extends Controller
 
     }
 
-    public function destroy($id)
+    public function destroy(Catalog $catalog)
     {
         try {
-            Catalog::find($id)->delete();
-            DB::table('catalog_uploads')
-                ->where('catalog_id', '=', $id)
-                ->delete();
+            $catalog->delete();
 
             return redirect()
                 ->route('catalog.index')
@@ -155,7 +146,7 @@ class CatalogController extends Controller
             DB::rollback();
 
             return redirect()
-                ->route('catalog.show', $catalog_id)
+                ->route('catalog.show', $catalog->id)
                 ->with('danger', 'Catalog could not be deleted.');
         }
     }

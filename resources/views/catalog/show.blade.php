@@ -28,7 +28,13 @@
 
         <div class="card-body">
             <div class="row row-cols-md-3">
-
+                @if (!count($catalog->uploads))
+                    <div class="container">
+                        <label class="text-center">
+                            {{ __('Look like you don\'t have any image in this catalog.') }}
+                        </label>
+                    </div>
+                @endif
                 @foreach ($catalog->uploads as $upload)
                 <div class="col-md-4">
                     <div class="card my-2">

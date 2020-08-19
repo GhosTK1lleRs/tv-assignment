@@ -14,7 +14,7 @@ class UploadController extends Controller
 {
     public function index()
     {
-        $user  = Auth::user();
+        $user = Auth::user();
         $uploads = Upload::orderBy('updated_at', 'DESC')
             ->where('user_id', '=', $user->id)
             ->paginate(30);
@@ -31,7 +31,6 @@ class UploadController extends Controller
     public function store(Request $request)
     {
         $arrData = $request->all();
-
         if ($request->hasFile('file')) {
 
             $destinationPath = 'storage/userupload';
@@ -66,12 +65,10 @@ class UploadController extends Controller
         }
     }
 
-
     public function show($id)
     {
         //
     }
-
 
     public function edit($id)
     {
@@ -80,40 +77,34 @@ class UploadController extends Controller
             ->where('user_id', '=', $user->id)
             ->get();
         return view('upload.edit', compact('catalog'));
-
     }
 
-
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        $id = $request->id;
-        $this->validate($request, [
+        $arrData = $request->validate([
             'id' => 'required',
             'name' => 'required|string',
         ]);
-        $input = $request->all();
 
-        $upload = Auth::user()->upload->find($id);
-        $upload->update($input);
+        $upload = Auth::user()->upload->find($request->id);
+        $upload->update($arrData);
 
         return redirect()->route('upload.index')
             ->with('success', 'File name updated successfully');
     }
 
-
-    public function destroy($id)
+    public function destroy(Upload $upload)
     {
         //Only auth user can delete file
         $user  = Auth::user();
         $file = Upload::select('fileurl')
-            ->where('id', '=', $id)
+            ->where('id', '=', $upload->id)
             ->Where('user_id', '=', $user->id)
-            ->limit(1)
-            ->get();
+            ->first();
 
         //delete file from storage
-        Storage::delete('public/userupload/' . $file[0]->fileurl);
-        Upload::find($id)->delete();
+        Storage::delete('public/userupload/' . $file->fileurl);
+        $upload->delete();
 
         return redirect()->route('upload.index')
             ->with('success', 'File deleted successfully');

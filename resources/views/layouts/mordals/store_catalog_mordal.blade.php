@@ -18,6 +18,15 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        @if(!count($uploads))
+                            <div class="card-body">
+                                <div class="container">
+                                    <label class="text-center">
+                                        {{ __('Look like you don\'t have any image! Please add some new image before create a new catalog.') }}
+                                    </label>
+                                </div>
+                            </div>
+                        @elseif(count($uploads))
                         @foreach($uploads as $upload)
                         <div class="custom-control custom-checkbox">
                             {!! Form::checkbox('upload_id[]', $upload->id,null, array('class' =>'custom-control-input','id' => 'customUploadCheckbox'.$upload->id)) !!}
@@ -29,6 +38,7 @@
                         </div>
                         <br />
                         @endforeach
+                        @endif
                     </div>
             </div>
 
